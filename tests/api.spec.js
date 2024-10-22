@@ -1194,8 +1194,6 @@ test.describe("API challenge", () => {
         "authorization": "Basic YWRtaW46cGFzc3dvcmQ="
       }
     });
-
-    console.log(response);
     
     expect(response.status()).toBe(201)
 
@@ -1425,9 +1423,12 @@ test.describe("API challenge", () => {
 
     test('59 Создание записи POST /todos по максимуму', {tag: ['@API', '@POST']}, async ({ request }) => {
       let challenge = 59;
+      let todoservice = new TodoService(request);
+      let todoCount = await todoservice.getTodoCount(token);
+
       let response
 
-      for (let i = 0; i < 11; i++) {
+      for (let i = 0; i <= 20-todoCount; i++) {
         response = await request.post(`${URL}todos`, {
           headers: {
             "x-challenger": token,
@@ -1440,10 +1441,8 @@ test.describe("API challenge", () => {
         });
       }
   
-
       let status = new GetChalengeStatus(request);
       let challengeStatus = await status.getChallengeStatus(token, challenge);
-      console.log(challengeStatus);
       expect(challengeStatus).toBe(true)
   
     });
